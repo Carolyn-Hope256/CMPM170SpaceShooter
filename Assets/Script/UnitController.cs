@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class UnitController : MonoBehaviour
 {
+    public GameObject Pickup;
     public float hp;
     public bool player;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -23,6 +24,7 @@ public class UnitController : MonoBehaviour
         {
             if (!player)
             {
+                var newpickup = Instantiate(Pickup, transform.position, transform.rotation);
                 Destroy(gameObject);
             }
             else

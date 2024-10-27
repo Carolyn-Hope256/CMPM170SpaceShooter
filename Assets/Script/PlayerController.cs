@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public Vector3 velocity;
+    public Vector3 deltav = new Vector3(0, 0, 0);
     public float MAX_SPEED;
 
     public float last_shot;
@@ -18,7 +19,10 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(velocity * Time.deltaTime*MAX_SPEED, Space.Self);
+        velocity.x *= (float).995;
+        velocity.z *= (float).995;
+        velocity += (transform.rotation * deltav);
+        transform.Translate(Quaternion.Inverse(transform.rotation)* velocity * Time.deltaTime*MAX_SPEED, Space.Self);
 
         Vector3 mouse = Mouse.current.position.value;
         mouse.z = Camera.main.transform.position.y;
@@ -30,8 +34,17 @@ public class PlayerController : MonoBehaviour
     public void Move(InputAction.CallbackContext context)
     {
         Vector2 move = context.ReadValue<Vector2>();
-        velocity.x = move.x;
-        velocity.z = move.y;
+        deltav.x = (float)(.01 * move.x);
+        deltav.z = (float)(.01 * move.y);
+
+        /*if (velocity.x < Mathf.Abs(move.x)){
+            velocity.x += (transform.rotation * deltav).x;
+        }
+        if (velocity.z < Mathf.Abs(move.y))
+        {
+            velocity.z += (transform.rotation * deltav).z;
+        }*/
+        
     }
 
     public void Fire(InputAction.CallbackContext context)
